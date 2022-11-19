@@ -1,0 +1,13 @@
+input CreateTaskInput {
+  taskTitle: String!
+  taskDescription: String
+  taskCategoryId: ID!
+}
+
+type CreateTaskOutput {
+  task: Task
+}
+
+type Mutation {
+  createTask(input: CreateTaskInput): CreateTaskOutput
+}

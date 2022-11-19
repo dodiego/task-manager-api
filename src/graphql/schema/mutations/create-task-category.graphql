@@ -1,0 +1,11 @@
+input CreateTaskCategoryInput {
+  name: String!
+}
+
+type CreateTaskCategoryOutput {
+  TaskCategory: TaskCategory
+}
+
+type Mutation {
+  createTaskCategory(input: CreateTaskCategoryInput): CreateTaskCategoryOutput
+}

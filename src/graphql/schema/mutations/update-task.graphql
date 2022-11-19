@@ -1,0 +1,14 @@
+input UpdateTaskInput {
+  taskId: ID!
+  newTaskTitle: String
+  newTaskDescription: String
+  newTaskColumnId: ID
+}
+
+type UpdateTaskOutput {
+  task: Task
+}
+
+type Mutation {
+  updateTask(input: UpdateTaskInput): UpdateTaskOutput
+}

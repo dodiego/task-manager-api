@@ -1,0 +1,13 @@
+input SignUpInput {
+  email: String!
+  password: String!
+  confirmPassword: String!
+}
+
+type SignUpOutput {
+  user: User
+}
+
+type Mutation {
+  signUp(input: SignUpInput): SignUpOutput
+}

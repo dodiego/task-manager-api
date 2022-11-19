@@ -1,0 +1,11 @@
+input ArchiveTaskInput {
+  taskId: ID!
+}
+
+type ArchiveTaskOutput {
+  success: Boolean!
+}
+
+type Mutation {
+  archiveTask(input: ArchiveTaskInput): ArchiveTaskOutput
+}

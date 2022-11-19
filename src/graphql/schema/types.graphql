@@ -1,0 +1,23 @@
+enum TaskStatus {
+  ToDo
+  InProgress
+  Done
+}
+
+type Task {
+  id: ID!
+  title: String!
+  description: String
+  status: TaskStatus
+}
+
+type TaskCategory {
+  id: ID!
+  name: String!
+  tasks: [Task]!
+}
+
+type User {
+  id: ID!
+  email: String!
+}
