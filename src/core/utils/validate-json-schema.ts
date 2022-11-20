@@ -1,6 +1,8 @@
 import Ajv, { JSONSchemaType, ValidateFunction } from "ajv";
 import addFormats, { FormatName } from "ajv-formats";
 import addCustomErrorMessages from "ajv-errors";
+import { logInfo } from "shared/logger";
+import { PlainJson } from "shared/types";
 type JsonSchemaWithFormats<T> = JSONSchemaType<T> & {
   type: "object";
   properties: {
@@ -25,18 +27,18 @@ addFormats(ajv);
 addCustomErrorMessages(ajv);
 const validators: { [key: string]: ValidateFunction } = {};
 
-function validate<T>(validator: ValidateFunction<T>, input: T) {
+function validate<T extends PlainJson>(validator: ValidateFunction, input: T) {
+  logInfo("Validating input", input);
   const success = validator(input);
 
   if (!success) {
-    console.log(validator.errors);
     throw new ValidationError(
       validator.errors!.map((error) => error.message).join("\n")
     );
   }
 }
 
-export function validateJsonAgainstJsonSchema<T>(
+export function validateJsonAgainstJsonSchema<T extends PlainJson>(
   input: T,
   jsonSchema: JsonSchemaWithCustomErrorMessages<T>
 ) {

@@ -1,5 +1,6 @@
-import config from "config";
+import config from "shared/config";
 import { createSigner, createVerifier } from "fast-jwt";
+import { logError } from "shared/logger";
 
 export type TokenPayload = {
   userId: string;
@@ -15,7 +16,7 @@ const tokenVerifier = createVerifier({
   key: config.apiSecret,
   cache: true,
 });
-
+export class AuthenticationError extends Error {}
 export async function generateUserToken(
   input: TokenPayload
 ): Promise<{ token: string }> {
@@ -26,6 +27,11 @@ export async function generateUserToken(
 export async function getUserDataFromToken(
   userToken: string
 ): Promise<TokenPayload> {
-  const payload = tokenVerifier(userToken);
-  return payload;
+  try {
+    const payload = tokenVerifier(userToken);
+    return payload;
+  } catch (error) {
+    logError(error);
+    throw new AuthenticationError("Invalid token");
+  }
 }

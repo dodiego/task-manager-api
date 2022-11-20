@@ -1,4 +1,5 @@
 import { Task, TaskStatus } from "@prisma/client";
+import { logInfo } from "shared/logger";
 import { client } from "./client";
 
 export type TaskModel = Task;
@@ -8,6 +9,7 @@ type CreateTaskInput = Pick<
   "title" | "description" | "taskCategoryId" | "userId"
 >;
 export async function createTask(input: CreateTaskInput): Promise<TaskModel> {
+  logInfo('Creating new Task', input)
   const task = client.task.create({
     data: {
       title: input.title,
@@ -17,6 +19,7 @@ export async function createTask(input: CreateTaskInput): Promise<TaskModel> {
       status: TaskStatus.ToDo,
     },
   });
+  logInfo('Task created')
 
   return task;
 }

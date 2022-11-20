@@ -1,15 +1,14 @@
-import { getUserDataFromToken } from "auth";
-import { PrivateHandlerFactory } from "core/shared/base";
+import { getUserDataFromToken } from "core/utils/crypto";
+import { PrivateHandlerFactory } from "core/utils/types";
 import {
   JsonSchemaErrorMessages,
   JsonSchemaWithCustomErrorMessages,
   validateJsonAgainstJsonSchema,
-} from "core/shared/validate-json-schema";
+} from "core/utils/validate-json-schema";
 import { TaskModel, createTask } from "database";
 
 export type Dependencies = {
   createTask: typeof createTask;
-  getUserDataFromToken: typeof getUserDataFromToken;
 };
 
 export type CreateOwnTaskInput = {
@@ -58,7 +57,7 @@ export const createOwnTaskFactory: PrivateHandlerFactory<
   CreateOwnTaskInput,
   CreateOwnTaskOutput
 > =
-  ({ createTask, getUserDataFromToken }) =>
+  ({ createTask }) =>
   async (userToken, input) => {
     validateJsonAgainstJsonSchema(input, inputJsonSchema);
     const { userId } = await getUserDataFromToken(userToken);
@@ -71,4 +70,4 @@ export const createOwnTaskFactory: PrivateHandlerFactory<
     return { task };
   };
 
-export default createOwnTaskFactory({ createTask, getUserDataFromToken });
+export default createOwnTaskFactory({ createTask });

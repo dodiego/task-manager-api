@@ -1,6 +1,5 @@
-jest.mock("database");
 import casual from "casual";
-import { generateUserToken } from "auth";
+import { AuthenticationError, generateUserToken } from "core/utils/crypto";
 import {
   createOwnTaskFactory,
   CreateOwnTaskInput,
@@ -8,8 +7,8 @@ import {
   Dependencies,
 } from "./create-own-task";
 import { mockDeep, DeepMockProxy } from "jest-mock-extended";
-import { PrivateHandler } from "core/shared/base";
-import { ValidationError } from "core/shared/validate-json-schema";
+import { PrivateHandler } from "core/utils/types";
+import { ValidationError } from "core/utils/validate-json-schema";
 
 describe("Create Own Task", () => {
   let userToken: string;
@@ -32,9 +31,6 @@ describe("Create Own Task", () => {
       taskDescription: casual.description,
       taskCategoryId: casual.uuid,
     };
-    mockedDependencies.getUserDataFromToken.mockResolvedValue({
-      userId,
-    });
     await createOwnTask(userToken, payload);
     expect(mockedDependencies.createTask).toHaveBeenCalledWith({
       title: payload.taskTitle,
@@ -42,6 +38,17 @@ describe("Create Own Task", () => {
       userId,
       taskCategoryId: payload.taskCategoryId,
     });
+  });
+
+  it("Should fail to create own task if user token is invalid", async () => {
+    const result = createOwnTask("invalid token", {
+      taskTitle: casual.title,
+      taskCategoryId: casual.uuid,
+      taskDescription: casual.description,
+    });
+
+    await expect(result).rejects.toThrowError("Invalid token");
+    expect(result).rejects.toBeInstanceOf(AuthenticationError);
   });
 
   it("Should fail to create own task if title is null", async () => {
@@ -69,7 +76,7 @@ describe("Create Own Task", () => {
     expect(result).rejects.toBeInstanceOf(ValidationError);
   });
 
-  it("Should fail to create own task if title is bigger than 300 characters", async () => {
+  it("Should fail to create own task if title have more than 300 characters", async () => {
     const result = createOwnTask(userToken, {
       taskCategoryId: casual.uuid,
       taskDescription: casual.description,
@@ -78,6 +85,19 @@ describe("Create Own Task", () => {
 
     await expect(result).rejects.toThrowError(
       "'taskTitle' is a required string with have at least 1 character and at most 300 characters"
+    );
+    expect(result).rejects.toBeInstanceOf(ValidationError);
+  });
+
+  it("Should fail to create own task if description have more than 6000 characters", async () => {
+    const result = createOwnTask(userToken, {
+      taskCategoryId: casual.uuid,
+      taskDescription: casual.words(6000),
+      taskTitle: casual.title,
+    });
+
+    await expect(result).rejects.toThrowError(
+      "'taskDescription' is an optional string with at most 6000 character"
     );
     expect(result).rejects.toBeInstanceOf(ValidationError);
   });
