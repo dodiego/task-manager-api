@@ -7,6 +7,7 @@ const config: CodegenConfig = {
     "src/graphql/generated/graphql-types.ts": {
       config: {
         contextType: "graphql/context#GraphQlContext",
+        enumsAsTypes: true,
       },
       plugins: [
         "typescript",

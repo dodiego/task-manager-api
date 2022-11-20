@@ -8,7 +8,7 @@ type Task {
   id: ID!
   title: String!
   description: String
-  status: TaskStatus
+  status: TaskStatus!
 }
 
 type TaskCategory {

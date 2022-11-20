@@ -6,6 +6,7 @@ export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
+export type RequireFields<T, K extends keyof T> = Omit<T, K> & { [P in K]-?: NonNullable<T[P]> };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -41,13 +42,13 @@ export type CreateTaskInput = {
 
 export type CreateTaskOutput = {
   __typename?: 'CreateTaskOutput';
-  task?: Maybe<Task>;
+  task: Task;
 };
 
 export type Mutation = {
   __typename?: 'Mutation';
   archiveTask?: Maybe<ArchiveTaskOutput>;
-  createTask?: Maybe<CreateTaskOutput>;
+  createTask: CreateTaskOutput;
   createTaskCategory?: Maybe<CreateTaskCategoryOutput>;
   signIn?: Maybe<SignInOutput>;
   signUp?: Maybe<SignUpOutput>;
@@ -61,7 +62,7 @@ export type MutationArchiveTaskArgs = {
 
 
 export type MutationCreateTaskArgs = {
-  input?: InputMaybe<CreateTaskInput>;
+  input: CreateTaskInput;
 };
 
 
@@ -114,7 +115,7 @@ export type Task = {
   __typename?: 'Task';
   description?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
-  status?: Maybe<TaskStatus>;
+  status: TaskStatus;
   title: Scalars['String'];
 };
 
@@ -125,11 +126,10 @@ export type TaskCategory = {
   tasks: Array<Maybe<Task>>;
 };
 
-export enum TaskStatus {
-  Done = 'Done',
-  InProgress = 'InProgress',
-  ToDo = 'ToDo'
-}
+export type TaskStatus =
+  | 'Done'
+  | 'InProgress'
+  | 'ToDo';
 
 export type UpdateTaskInput = {
   newTaskColumnId?: InputMaybe<Scalars['ID']>;
@@ -276,13 +276,13 @@ export type CreateTaskCategoryOutputResolvers<ContextType = GraphQlContext, Pare
 };
 
 export type CreateTaskOutputResolvers<ContextType = GraphQlContext, ParentType extends ResolversParentTypes['CreateTaskOutput'] = ResolversParentTypes['CreateTaskOutput']> = {
-  task?: Resolver<Maybe<ResolversTypes['Task']>, ParentType, ContextType>;
+  task?: Resolver<ResolversTypes['Task'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type MutationResolvers<ContextType = GraphQlContext, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
   archiveTask?: Resolver<Maybe<ResolversTypes['ArchiveTaskOutput']>, ParentType, ContextType, Partial<MutationArchiveTaskArgs>>;
-  createTask?: Resolver<Maybe<ResolversTypes['CreateTaskOutput']>, ParentType, ContextType, Partial<MutationCreateTaskArgs>>;
+  createTask?: Resolver<ResolversTypes['CreateTaskOutput'], ParentType, ContextType, RequireFields<MutationCreateTaskArgs, 'input'>>;
   createTaskCategory?: Resolver<Maybe<ResolversTypes['CreateTaskCategoryOutput']>, ParentType, ContextType, Partial<MutationCreateTaskCategoryArgs>>;
   signIn?: Resolver<Maybe<ResolversTypes['SignInOutput']>, ParentType, ContextType, Partial<MutationSignInArgs>>;
   signUp?: Resolver<Maybe<ResolversTypes['SignUpOutput']>, ParentType, ContextType, Partial<MutationSignUpArgs>>;
@@ -306,7 +306,7 @@ export type SignUpOutputResolvers<ContextType = GraphQlContext, ParentType exten
 export type TaskResolvers<ContextType = GraphQlContext, ParentType extends ResolversParentTypes['Task'] = ResolversParentTypes['Task']> = {
   description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  status?: Resolver<Maybe<ResolversTypes['TaskStatus']>, ParentType, ContextType>;
+  status?: Resolver<ResolversTypes['TaskStatus'], ParentType, ContextType>;
   title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };

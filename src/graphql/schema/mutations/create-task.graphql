@@ -5,9 +5,9 @@ input CreateTaskInput {
 }
 
 type CreateTaskOutput {
-  task: Task
+  task: Task!
 }
 
 type Mutation {
-  createTask(input: CreateTaskInput): CreateTaskOutput
+  createTask(input: CreateTaskInput!): CreateTaskOutput!
 }

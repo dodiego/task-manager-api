@@ -10,3 +10,11 @@ services:
       NODE_ENV: production
     ports:
       - 3000:3000
+  database:
+    image: postgres:15-alpine
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=postgres
+    ports:
+      - "5432:5432"
