@@ -6,3 +6,5 @@ export type PrivateHandler<TInput, TOutput> = (
 export type PrivateHandlerFactory<TDependencies, TInput, TOutput> = (
   dependencies: TDependencies
 ) => PrivateHandler<TInput, TOutput>;
+
+export class BusinessRuleError extends Error {}

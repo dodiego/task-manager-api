@@ -7,7 +7,7 @@ import {
   Dependencies,
 } from "./create-own-task";
 import { mockDeep, DeepMockProxy } from "jest-mock-extended";
-import { PrivateHandler } from "core/utils/types";
+import { PrivateHandler, BusinessRuleError } from "core/utils/types";
 import { ValidationError } from "core/utils/validate-json-schema";
 
 describe("Create Own Task", () => {
@@ -31,6 +31,11 @@ describe("Create Own Task", () => {
       taskDescription: casual.description,
       taskCategoryId: casual.uuid,
     };
+    mockedDependencies.findTaskCategoryById.mockResolvedValue({
+      id: casual.uuid,
+      name: casual.title,
+      tasks: [],
+    });
     await createOwnTask(userToken, payload);
     expect(mockedDependencies.createTask).toHaveBeenCalledWith({
       title: payload.taskTitle,
@@ -48,7 +53,7 @@ describe("Create Own Task", () => {
     });
 
     await expect(result).rejects.toThrowError("Invalid token");
-    expect(result).rejects.toBeInstanceOf(AuthenticationError);
+    await expect(result).rejects.toBeInstanceOf(AuthenticationError);
   });
 
   it("Should fail to create own task if title is null", async () => {
@@ -60,7 +65,7 @@ describe("Create Own Task", () => {
     await expect(result).rejects.toThrowError(
       "'taskTitle' is a required string with have at least 1 character and at most 300 characters"
     );
-    expect(result).rejects.toBeInstanceOf(ValidationError);
+    await expect(result).rejects.toBeInstanceOf(ValidationError);
   });
 
   it("Should fail to create own task if title is empty", async () => {
@@ -73,7 +78,7 @@ describe("Create Own Task", () => {
     await expect(result).rejects.toThrowError(
       "'taskTitle' is a required string with have at least 1 character and at most 300 characters"
     );
-    expect(result).rejects.toBeInstanceOf(ValidationError);
+    await expect(result).rejects.toBeInstanceOf(ValidationError);
   });
 
   it("Should fail to create own task if title have more than 300 characters", async () => {
@@ -86,7 +91,7 @@ describe("Create Own Task", () => {
     await expect(result).rejects.toThrowError(
       "'taskTitle' is a required string with have at least 1 character and at most 300 characters"
     );
-    expect(result).rejects.toBeInstanceOf(ValidationError);
+    await expect(result).rejects.toBeInstanceOf(ValidationError);
   });
 
   it("Should fail to create own task if description have more than 6000 characters", async () => {
@@ -99,6 +104,19 @@ describe("Create Own Task", () => {
     await expect(result).rejects.toThrowError(
       "'taskDescription' is an optional string with at most 6000 character"
     );
-    expect(result).rejects.toBeInstanceOf(ValidationError);
+    await expect(result).rejects.toBeInstanceOf(ValidationError);
+  });
+
+  it("Should fail to create own task if task category does not exist", async () => {
+    const result = createOwnTask(userToken, {
+      taskCategoryId: casual.uuid,
+      taskDescription: casual.description,
+      taskTitle: casual.title,
+    });
+
+    mockedDependencies.findTaskCategoryById.mockResolvedValue(null);
+
+    await expect(result).rejects.toThrowError("Task Category does not exist");
+    await expect(result).rejects.toBeInstanceOf(BusinessRuleError);
   });
 });

@@ -27,7 +27,10 @@ addFormats(ajv);
 addCustomErrorMessages(ajv);
 const validators: { [key: string]: ValidateFunction } = {};
 
-function validate<T extends PlainJson>(validator: ValidateFunction, input: T) {
+function validate<T extends PlainJson>(
+  validator: ValidateFunction,
+  input: T
+): void {
   logInfo("Validating input", input);
   const success = validator(input);
 
@@ -41,7 +44,7 @@ function validate<T extends PlainJson>(validator: ValidateFunction, input: T) {
 export function validateJsonAgainstJsonSchema<T extends PlainJson>(
   input: T,
   jsonSchema: JsonSchemaWithCustomErrorMessages<T>
-) {
+): void {
   const stringifiedJsonSchema = JSON.stringify(jsonSchema);
   if (!validators[stringifiedJsonSchema]) {
     validators[stringifiedJsonSchema] = ajv.compile(jsonSchema);

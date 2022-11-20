@@ -9,8 +9,8 @@ type CreateTaskInput = Pick<
   "title" | "description" | "taskCategoryId" | "userId"
 >;
 export async function createTask(input: CreateTaskInput): Promise<TaskModel> {
-  logInfo('Creating new Task', input)
-  const task = client.task.create({
+  logInfo("Creating new Task", input);
+  const task = await client.task.create({
     data: {
       title: input.title,
       description: input.description,
@@ -19,7 +19,7 @@ export async function createTask(input: CreateTaskInput): Promise<TaskModel> {
       status: TaskStatus.ToDo,
     },
   });
-  logInfo('Task created')
+  logInfo("Task created");
 
   return task;
 }
@@ -32,7 +32,7 @@ export async function updateTask(
   taskId: string,
   fields: TaskUpdatableFields
 ): Promise<TaskModel> {
-  const task = client.task.update({
+  const task = await client.task.update({
     data: {
       title: fields.title,
       description: fields.description,

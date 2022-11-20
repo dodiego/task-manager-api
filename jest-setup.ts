@@ -1,1 +1,1 @@
-jest.mock("common/logger.ts");
+jest.mock("shared/logger.ts");

@@ -1,14 +1,16 @@
 import { getUserDataFromToken } from "core/utils/crypto";
-import { PrivateHandlerFactory } from "core/utils/types";
+import { PrivateHandlerFactory, BusinessRuleError } from "core/utils/types";
 import {
   JsonSchemaErrorMessages,
   JsonSchemaWithCustomErrorMessages,
   validateJsonAgainstJsonSchema,
 } from "core/utils/validate-json-schema";
 import { TaskModel, createTask } from "database";
+import { findTaskCategoryById } from "database/task-category";
 
 export type Dependencies = {
   createTask: typeof createTask;
+  findTaskCategoryById: typeof findTaskCategoryById;
 };
 
 export type CreateOwnTaskInput = {
@@ -57,10 +59,16 @@ export const createOwnTaskFactory: PrivateHandlerFactory<
   CreateOwnTaskInput,
   CreateOwnTaskOutput
 > =
-  ({ createTask }) =>
+  ({ createTask, findTaskCategoryById }) =>
   async (userToken, input) => {
     validateJsonAgainstJsonSchema(input, inputJsonSchema);
     const { userId } = await getUserDataFromToken(userToken);
+    const taskCategory = await findTaskCategoryById(input.taskCategoryId);
+
+    if (!taskCategory) {
+      throw new BusinessRuleError("Task Category does not exist");
+    }
+
     const task = await createTask({
       title: input.taskTitle,
       description: input.taskDescription!,
@@ -70,4 +78,4 @@ export const createOwnTaskFactory: PrivateHandlerFactory<
     return { task };
   };
 
-export default createOwnTaskFactory({ createTask });
+export default createOwnTaskFactory({ createTask, findTaskCategoryById });

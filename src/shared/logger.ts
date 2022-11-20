@@ -3,13 +3,13 @@ import { PlainJson } from "./types";
 
 const logger = pino();
 
-export const logInfo = (message: string, context: PlainJson = {}) =>
+export const logInfo = (message: string, context: PlainJson = {}): void =>
   logger.info(context, message);
 
-export const logWarning = (message: string, context: PlainJson = {}) =>
+export const logWarning = (message: string, context: PlainJson = {}): void =>
   logger.info(context, message);
 
-export const logError = (error: Error, context: PlainJson = {}) =>
+export const logError = (error: Error, context: PlainJson = {}): void =>
   logger.info({
     ...context,
     errorMessage: error.message,
