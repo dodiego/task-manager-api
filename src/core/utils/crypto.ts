@@ -10,11 +10,11 @@ export type TokenPayload = {
 const millisecondsInOneHour = 1000 * 60 * 60;
 
 const tokenSigner = createSigner({
-  key: config.apiSecret,
+  key: config.API_SECRET,
   expiresIn: millisecondsInOneHour,
 });
 const tokenVerifier = createVerifier({
-  key: config.apiSecret,
+  key: config.API_SECRET,
   cache: true,
 });
 export class AuthenticationError extends Error {}

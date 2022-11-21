@@ -40,9 +40,9 @@ export async function startServer(): Promise<void> {
   );
 
   await new Promise<void>((resolve) =>
-    httpServer.listen({ port: config.apiPort }, resolve)
+    httpServer.listen({ port: config.API_PORT }, resolve)
   );
   logInfo(
-    `GraphQL Server Listening at http://localhost:${config.apiPort}/graphql`
+    `GraphQL Server Listening at http://localhost:${config.API_PORT}/graphql`
   );
 }
