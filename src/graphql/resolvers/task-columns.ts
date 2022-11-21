@@ -7,7 +7,8 @@ export const TaskColumnsResolver: QueryResolvers["taskColumns"] = async (
   context
 ) => {
   const { taskCategories } = await listOwnTaskCategoriesAndTasks(
-    context.userToken!
+    context.userToken!,
+    null
   );
 
   return taskCategories;
