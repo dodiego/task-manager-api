@@ -2,11 +2,11 @@ input SignInInput {
   email: String!
   password: String!
 }
-
-type SignInOutput {
-  accessToken: String!
-}
-
+union SignInOutput =
+    AuthenticationOutput
+  | ValidationError
+  | BusinessRuleError
+  | UnknownError
 type Mutation {
-  signIn(input: SignInInput): SignInOutput
+  signIn(input: SignInInput!): SignInOutput
 }

@@ -5,8 +5,7 @@ import {
   JsonSchemaWithCustomErrorMessages,
   validateJsonAgainstJsonSchema,
 } from "core/utils/validate-json-schema";
-import { TaskModel, createTask } from "database";
-import { findTaskCategoryById } from "database/task-category";
+import { TaskModel, createTask, findTaskCategoryById } from "database";
 
 export type Dependencies = {
   createTask: typeof createTask;

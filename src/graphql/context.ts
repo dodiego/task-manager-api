@@ -1,3 +1,3 @@
 export type GraphQlContext = {
-  userToken: string;
+  userToken?: string;
 };

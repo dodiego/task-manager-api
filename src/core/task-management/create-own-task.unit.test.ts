@@ -1,5 +1,5 @@
 import casual from "casual";
-import { AuthenticationError, generateUserToken } from "core/utils/crypto";
+import { AuthenticationError, generateAccessToken } from "core/utils/crypto";
 import {
   createOwnTaskFactory,
   CreateOwnTaskInput,
@@ -20,7 +20,7 @@ describe("Create Own Task", () => {
 
     createOwnTask = createOwnTaskFactory(mockedDependencies);
     userId = casual.uuid;
-    const result = await generateUserToken({
+    const result = await generateAccessToken({
       userId,
     });
     userToken = result.token;

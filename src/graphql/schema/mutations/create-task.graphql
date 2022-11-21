@@ -4,9 +4,16 @@ input CreateTaskInput {
   taskCategoryId: ID!
 }
 
-type CreateTaskOutput {
+type CreateTaskSuccessOutput {
   task: Task!
 }
+
+union CreateTaskOutput =
+    CreateTaskSuccessOutput
+  | ValidationError
+  | BusinessRuleError
+  | AuthenticationError
+  | UnknownError
 
 type Mutation {
   createTask(input: CreateTaskInput!): CreateTaskOutput!

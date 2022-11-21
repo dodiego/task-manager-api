@@ -1,6 +1,7 @@
 import config from "shared/config";
 import { createSigner, createVerifier } from "fast-jwt";
 import { logError } from "shared/logger";
+import * as argon2 from "argon2";
 
 export type TokenPayload = {
   userId: string;
@@ -17,7 +18,7 @@ const tokenVerifier = createVerifier({
   cache: true,
 });
 export class AuthenticationError extends Error {}
-export async function generateUserToken(
+export async function generateAccessToken(
   input: TokenPayload
 ): Promise<{ token: string }> {
   const token = tokenSigner(input);
@@ -34,4 +35,22 @@ export async function getUserDataFromToken(
     logError(error);
     throw new AuthenticationError("Invalid token");
   }
+}
+
+export async function hashString(
+  input: string
+): Promise<{ hashedInput: string }> {
+  const hashedInput = await argon2.hash(input);
+
+  return { hashedInput };
+}
+
+type VerifyHashInput = {
+  originalString: string;
+  hashedString: string;
+};
+export async function verifyHash(input: VerifyHashInput): Promise<boolean> {
+  const isValid = await argon2.verify(input.hashedString, input.originalString);
+
+  return isValid;
 }

@@ -15,3 +15,6 @@ export const logError = (error: Error, context: PlainJson = {}): void =>
     errorMessage: error.message,
     stackTrace: error.stack,
   });
+
+export const logFatal = (error: Error): void =>
+  logger.fatal({ errorMessage: error.message, stackTrace: error.stack });

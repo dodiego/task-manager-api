@@ -21,3 +21,28 @@ type User {
   id: ID!
   email: String!
 }
+
+interface BaseError {
+  message: String!
+}
+
+type ValidationError implements BaseError {
+  message: String!
+}
+
+type BusinessRuleError implements BaseError {
+  message: String!
+}
+
+type AuthenticationError implements BaseError {
+  message: String!
+}
+
+type UnknownError implements BaseError {
+  message: String!
+}
+
+
+type AuthenticationOutput {
+  accessToken: String!
+}

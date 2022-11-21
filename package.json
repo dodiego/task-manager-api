@@ -30,12 +30,18 @@
     "typescript": "*"
   },
   "dependencies": {
+    "@apollo/server": "^4.1.1",
+    "@graphql-tools/load-files": "^6.6.1",
     "@prisma/client": "^4.6.1",
     "ajv": "^8.11.2",
     "ajv-errors": "^3.0.0",
     "ajv-formats": "^2.1.1",
+    "argon2": "^0.30.2",
+    "body-parser": "^1.20.1",
+    "cors": "^2.8.5",
     "dotenv": "^16.0.3",
     "env-schema": "^5.1.1",
+    "express": "^4.18.2",
     "fast-jwt": "^2.0.2",
     "graphql": "^16.6.0",
     "graphql-tag": "^2.12.6",
@@ -53,6 +59,7 @@
     "db:start": "docker-compose up -d database",
     "db:generate": "prisma migrate reset && prisma generate",
     "db:migrate": "prisma migrate dev && prisma generate",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "test": "jest"
   }
 }
