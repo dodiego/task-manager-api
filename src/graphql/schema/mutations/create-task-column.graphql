@@ -1,0 +1,18 @@
+input CreateTaskColumnInput {
+  name: String!
+}
+
+type CreateTaskColumnSuccessOutput {
+  taskColumn: TaskColumn!
+}
+
+union CreateTaskColumnOutput =
+    CreateTaskColumnSuccessOutput
+  | ValidationError
+  | BusinessRuleError
+  | AuthenticationError
+  | UnknownError
+
+type Mutation {
+  createTaskColumn(input: CreateTaskColumnInput!): CreateTaskColumnOutput!
+}

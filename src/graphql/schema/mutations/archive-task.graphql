@@ -14,5 +14,5 @@ union ArchiveTaskOutput =
   | UnknownError
 
 type Mutation {
-  archiveTask(input: ArchiveTaskInput!): ArchiveTaskOutput
+  archiveTask(input: ArchiveTaskInput!): ArchiveTaskOutput!
 }

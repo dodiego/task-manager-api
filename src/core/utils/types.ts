@@ -1,6 +1,6 @@
 export type PrivateHandler<TInput, TOutput> = (
   userToken: string,
-  input: TInput
+  input?: TInput
 ) => Promise<TOutput>;
 
 export type PrivateHandlerFactory<TDependencies, TInput, TOutput> = (

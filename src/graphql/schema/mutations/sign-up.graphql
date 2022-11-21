@@ -4,8 +4,12 @@ input SignUpInput {
   confirmPassword: String!
 }
 
-union SignUpOutput =AuthenticationOutput | ValidationError | BusinessRuleError | UnknownError
+union SignUpOutput =
+    AuthenticationOutput
+  | ValidationError
+  | BusinessRuleError
+  | UnknownError
 
 type Mutation {
-  signUp(input: SignUpInput!): SignUpOutput
+  signUp(input: SignUpInput!): SignUpOutput!
 }

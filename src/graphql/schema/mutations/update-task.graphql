@@ -17,5 +17,5 @@ union UpdateTaskOutput =
   | UnknownError
 
 type Mutation {
-  updateTask(input: UpdateTaskInput!): UpdateTaskOutput
+  updateTask(input: UpdateTaskInput!): UpdateTaskOutput!
 }

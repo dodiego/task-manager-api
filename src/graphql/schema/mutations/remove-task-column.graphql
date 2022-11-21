@@ -1,0 +1,18 @@
+input RemoveTaskColumnInput {
+  taskColumnId: ID!
+}
+
+type RemoveTaskColumnSuccessOutput {
+  taskColumn: TaskColumn!
+}
+
+union RemoveTaskColumnOutput =
+    RemoveTaskColumnSuccessOutput
+  | ValidationError
+  | BusinessRuleError
+  | AuthenticationError
+  | UnknownError
+
+type Mutation {
+  removeTaskColumn(input: RemoveTaskColumnInput!): RemoveTaskColumnOutput!
+}

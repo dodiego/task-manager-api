@@ -10,12 +10,12 @@ export async function findTaskCategoryById(
     where: {
       id: taskCategoryId,
     },
-    include: {
-      tasks: true,
-    },
   });
 
-  return taskCategory;
+  if (taskCategory) {
+    return { ...taskCategory, tasks: [] };
+  }
+  return null;
 }
 
 type CreateTaskCategoryInput = Pick<TaskCategoryModel, "name" | "userId">;
@@ -27,16 +27,9 @@ export async function createTaskCategory(
       name: input.name,
       userId: input.userId,
     },
-    include: {
-      tasks: {
-        where: {
-          isArchived: false,
-        },
-      },
-    },
   });
 
-  return taskCategory;
+  return { ...taskCategory, tasks: [] };
 }
 
 type TaskCategoryUpdatableFields = Pick<Partial<TaskCategoryModel>, "name">;
@@ -51,27 +44,21 @@ export async function updateTaskCategory(
     where: {
       id: taskCategoryId,
     },
-    include: {
-      tasks: true,
-    },
   });
 
-  return taskCategory;
+  return { ...taskCategory, tasks: [] };
 }
 
 export async function removeTaskCategory(
   taskCategoryId: string
-): Promise<TaskCategory> {
+): Promise<TaskCategoryModel> {
   const taskCategory = await client.taskCategory.delete({
     where: {
       id: taskCategoryId,
     },
-    include: {
-      tasks: true,
-    },
   });
 
-  return taskCategory;
+  return { ...taskCategory, tasks: [] };
 }
 
 export async function findTaskCategoriesAndTasksByUserId(
@@ -82,7 +69,11 @@ export async function findTaskCategoriesAndTasksByUserId(
       userId,
     },
     include: {
-      tasks: true,
+      tasks: {
+        where: {
+          isArchived: false,
+        },
+      },
     },
   });
 

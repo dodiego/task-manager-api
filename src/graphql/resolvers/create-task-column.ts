@@ -1,14 +1,14 @@
 import createOwnTaskCategory from "core/task-management/create-own-task-category";
 import {
-  CreateTaskCategorySuccessOutput,
+  CreateTaskColumnSuccessOutput,
   MutationResolvers,
 } from "graphql/generated/graphql-types";
 import { PrivateGraphQlResolverHandler } from "graphql/utils/unified-handler";
 
-export const CreateTaskCategoryResolver: MutationResolvers["createTaskCategory"] =
+export const CreateTaskColumnResolver: MutationResolvers["createTaskColumn"] =
   async (_, { input }, context) => {
     const result =
-      await PrivateGraphQlResolverHandler<CreateTaskCategorySuccessOutput>(
+      await PrivateGraphQlResolverHandler<CreateTaskColumnSuccessOutput>(
         async () => {
           const { taskCategory } = await createOwnTaskCategory(
             context.userToken!,
@@ -17,8 +17,8 @@ export const CreateTaskCategoryResolver: MutationResolvers["createTaskCategory"]
             }
           );
           return {
-            __typename: "CreateTaskCategorySuccessOutput",
-            taskCategory,
+            __typename: "CreateTaskColumnSuccessOutput",
+            taskColumn: taskCategory,
           };
         }
       );
