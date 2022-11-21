@@ -3,4 +3,4 @@
 
 exec >/dev/tty 2>&1
 
-npm test & npx lint-staged
+npm test && npx lint-staged

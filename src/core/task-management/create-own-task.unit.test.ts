@@ -34,6 +34,7 @@ describe("Create Own Task", () => {
     mockedDependencies.findTaskCategoryById.mockResolvedValue({
       id: casual.uuid,
       name: casual.title,
+      userId: casual.uuid,
       tasks: [],
     });
     await createOwnTask(userToken, payload);
@@ -63,7 +64,7 @@ describe("Create Own Task", () => {
     } as any);
 
     await expect(result).rejects.toThrowError(
-      "'taskTitle' is a required string with have at least 1 character and at most 300 characters"
+      "'taskTitle' is a required string with at least 1 character and at most 300 characters"
     );
     await expect(result).rejects.toBeInstanceOf(ValidationError);
   });
@@ -76,12 +77,12 @@ describe("Create Own Task", () => {
     });
 
     await expect(result).rejects.toThrowError(
-      "'taskTitle' is a required string with have at least 1 character and at most 300 characters"
+      "'taskTitle' is a required string with at least 1 character and at most 300 characters"
     );
     await expect(result).rejects.toBeInstanceOf(ValidationError);
   });
 
-  it("Should fail to create own task if title have more than 300 characters", async () => {
+  it("Should fail to create own task if title more than 300 characters", async () => {
     const result = createOwnTask(userToken, {
       taskCategoryId: casual.uuid,
       taskDescription: casual.description,
@@ -89,7 +90,7 @@ describe("Create Own Task", () => {
     });
 
     await expect(result).rejects.toThrowError(
-      "'taskTitle' is a required string with have at least 1 character and at most 300 characters"
+      "'taskTitle' is a required string with at least 1 character and at most 300 characters"
     );
     await expect(result).rejects.toBeInstanceOf(ValidationError);
   });
