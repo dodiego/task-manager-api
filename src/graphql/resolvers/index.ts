@@ -2,6 +2,7 @@ import { Resolvers } from "graphql/generated/graphql-types";
 import { ArchiveTaskResolver } from "./archive-task";
 import { CreateTaskResolver } from "./create-task";
 import { CreateTaskColumnResolver } from "./create-task-column";
+import { RemoveTaskColumnResolver } from "./remove-task-column";
 import { SignInResolver } from "./sign-in";
 import { SignUpResolver } from "./sign-up";
 import { TaskColumnsResolver } from "./task-columns";
@@ -13,6 +14,7 @@ const resolvers: Resolvers = {
     updateTask: UpdateTaskResolver,
     archiveTask: ArchiveTaskResolver,
     createTaskColumn: CreateTaskColumnResolver,
+    removeTaskColumn: RemoveTaskColumnResolver,
     signUp: SignUpResolver,
     signIn: SignInResolver,
   },

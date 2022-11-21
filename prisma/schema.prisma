@@ -20,7 +20,7 @@ model Task {
   id             String       @id @default(dbgenerated("gen_random_uuid()"))
   title          String       @db.VarChar(300)
   description    String?      @db.VarChar(6000)
-  taskCategory   TaskCategory @relation(fields: [taskCategoryId], references: [id])
+  taskCategory   TaskCategory @relation(fields: [taskCategoryId], references: [id], onDelete: Cascade)
   taskCategoryId String       @map("task_category_id")
   status         TaskStatus
   user           User         @relation(fields: [userId], references: [id])

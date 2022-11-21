@@ -10,12 +10,16 @@ export async function findTaskCategoryById(
     where: {
       id: taskCategoryId,
     },
+    include: {
+      tasks: {
+        where: {
+          isArchived: false,
+        },
+      },
+    },
   });
 
-  if (taskCategory) {
-    return { ...taskCategory, tasks: [] };
-  }
-  return null;
+  return taskCategory;
 }
 
 type CreateTaskCategoryInput = Pick<TaskCategoryModel, "name" | "userId">;

@@ -16,17 +16,17 @@ export type Dependencies = {
   findTaskCategoryById: typeof findTaskCategoryById;
 };
 
-export type RemoveTaskCategoryInput = {
+export type RemoveOwnTaskCategoryInput = {
   taskCategoryId: string;
 };
 
-export type RemoveTaskCategoryOutput = {
+export type RemoveOwnTaskCategoryOutput = {
   taskCategory: TaskCategoryModel;
 };
-const errorMessages: JsonSchemaErrorMessages<RemoveTaskCategoryInput> = {
+const errorMessages: JsonSchemaErrorMessages<RemoveOwnTaskCategoryInput> = {
   taskCategoryId: "'taskCategoryId' is a required string and must be an uuid",
 };
-const inputJsonSchema: JsonSchemaWithCustomErrorMessages<RemoveTaskCategoryInput> =
+const inputJsonSchema: JsonSchemaWithCustomErrorMessages<RemoveOwnTaskCategoryInput> =
   {
     type: "object",
     properties: {
@@ -42,10 +42,10 @@ const inputJsonSchema: JsonSchemaWithCustomErrorMessages<RemoveTaskCategoryInput
     },
   };
 
-export const archiveOwnTaskFactory: PrivateHandlerFactory<
+export const removeOwnTaskCategoryFactory: PrivateHandlerFactory<
   Dependencies,
-  RemoveTaskCategoryInput,
-  RemoveTaskCategoryOutput
+  RemoveOwnTaskCategoryInput,
+  RemoveOwnTaskCategoryOutput
 > =
   ({ findTaskCategoryById, removeTaskCategory }) =>
   async (userToken, input) => {
@@ -61,7 +61,7 @@ export const archiveOwnTaskFactory: PrivateHandlerFactory<
     return { taskCategory };
   };
 
-export default archiveOwnTaskFactory({
+export default removeOwnTaskCategoryFactory({
   findTaskCategoryById,
   removeTaskCategory,
 });
