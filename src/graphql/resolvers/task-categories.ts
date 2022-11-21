@@ -11,6 +11,5 @@ export const TaskCategoriesResolver: QueryResolvers["taskCategories"] = async (
     null
   );
 
-  console.log(taskCategories);
   return taskCategories;
 };

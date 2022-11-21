@@ -1,4 +1,3 @@
-// npm install @apollo/server express graphql cors body-parser
 import { ApolloServer } from "@apollo/server";
 import { expressMiddleware } from "@apollo/server/express4";
 import { ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHttpServer";
@@ -11,6 +10,7 @@ import { loadFilesSync } from "@graphql-tools/load-files";
 import path from "path";
 import resolvers from "graphql/resolvers";
 import { GraphQlContext } from "graphql/context";
+import { logInfo } from "shared/logger";
 const typeDefs = loadFilesSync(
   path.join(__dirname, "../graphql/schema/**/*.graphql"),
   {
@@ -39,8 +39,10 @@ export async function startServer(): Promise<void> {
     })
   );
 
-  // Modified server startup
   await new Promise<void>((resolve) =>
     httpServer.listen({ port: config.apiPort }, resolve)
+  );
+  logInfo(
+    `GraphQL Server Listening at http://localhost:${config.apiPort}/graphql`
   );
 }
