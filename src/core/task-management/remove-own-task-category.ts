@@ -10,6 +10,7 @@ import {
   removeTaskCategory,
   findTaskCategoryById,
 } from "database";
+import { logWarning } from "shared/logger";
 
 export type Dependencies = {
   removeTaskCategory: typeof removeTaskCategory;
@@ -50,11 +51,19 @@ export const removeOwnTaskCategoryFactory: PrivateHandlerFactory<
   ({ findTaskCategoryById, removeTaskCategory }) =>
   async (userToken, input) => {
     validateJsonAgainstJsonSchema(input, inputJsonSchema);
-    await getUserDataFromToken(userToken);
+    const { userId } = await getUserDataFromToken(userToken);
     const taskCategory = await findTaskCategoryById(input.taskCategoryId);
 
     if (!taskCategory) {
       throw new BusinessRuleError("Task Category does not exist");
+    }
+
+    if (taskCategory.userId !== userId) {
+      logWarning("Attempt to remove non-owned task category", {
+        userId,
+        taskCategoryId: taskCategory.id,
+      });
+      throw new BusinessRuleError("You are not allowed to perform this action");
     }
 
     await removeTaskCategory(input.taskCategoryId);

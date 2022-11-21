@@ -13,7 +13,7 @@ type CreateTaskInput = Pick<
   "title" | "description" | "taskCategoryId" | "userId"
 >;
 export async function createTask(input: CreateTaskInput): Promise<TaskModel> {
-  logInfo("Creating new Task", input);
+  logInfo("Creating new task", input);
   const task = await client.task.create({
     data: {
       title: input.title,
@@ -23,7 +23,7 @@ export async function createTask(input: CreateTaskInput): Promise<TaskModel> {
       status: TaskStatus.ToDo,
     },
   });
-  logInfo("Task created");
+  logInfo("Task created", input);
 
   return task;
 }
@@ -36,6 +36,7 @@ export async function updateTask(
   taskId: string,
   fields: TaskUpdatableFields
 ): Promise<TaskModel> {
+  logInfo("Updating task", { taskId, ...fields });
   const task = await client.task.update({
     data: {
       title: fields.title,
@@ -48,16 +49,18 @@ export async function updateTask(
       id: taskId,
     },
   });
+  logInfo("Task updated", { taskId, ...fields });
 
   return task;
 }
 
 export async function findTaskById(taskId: string): Promise<TaskModel | null> {
+  logInfo("Fetching task", { taskId });
   const task = await client.task.findUnique({
     where: {
       id: taskId,
     },
   });
-
+  logInfo("Task fetched", { taskId });
   return task;
 }

@@ -1,7 +1,9 @@
 import pino from "pino";
 import { PlainJson } from "./types";
 
-const logger = pino();
+const logger = pino({
+  redact: ["password"],
+});
 
 export const logInfo = (message: string, context: PlainJson = {}): void =>
   logger.info(context, message);

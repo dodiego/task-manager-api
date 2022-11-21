@@ -10,6 +10,7 @@ import {
   updateTaskCategory,
   findTaskCategoryById,
 } from "database";
+import { logWarning } from "shared/logger";
 
 export type Dependencies = {
   updateTaskCategory: typeof updateTaskCategory;
@@ -59,11 +60,18 @@ export const updateOwnTaskFactory: PrivateHandlerFactory<
   ({ updateTaskCategory, findTaskCategoryById }) =>
   async (userToken, input) => {
     validateJsonAgainstJsonSchema(input, inputJsonSchema);
-    await getUserDataFromToken(userToken);
+    const { userId } = await getUserDataFromToken(userToken);
     const taskCategory = await findTaskCategoryById(input.taskCategoryId);
 
     if (!taskCategory) {
       throw new BusinessRuleError("Task Category does not exist");
+    }
+
+    if (taskCategory.userId !== userId) {
+      logWarning("Attempt to update non-owned task category", {
+        userId,
+        taskCategoryId: taskCategory.id,
+      });
     }
 
     const updatedTaskCategory = await updateTaskCategory(input.taskCategoryId, {

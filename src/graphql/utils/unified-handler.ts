@@ -1,6 +1,6 @@
-import { ValidationError } from "ajv";
 import { AuthenticationError } from "core/utils/crypto";
 import { BusinessRuleError } from "core/utils/types";
+import { ValidationError } from "core/utils/validate-json-schema";
 import { ResolversTypes } from "graphql/generated/graphql-types";
 import { logError } from "shared/logger";
 

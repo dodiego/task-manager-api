@@ -6,6 +6,7 @@ import {
   validateJsonAgainstJsonSchema,
 } from "core/utils/validate-json-schema";
 import { TaskModel, updateTask, findTaskById } from "database";
+import { logWarning } from "shared/logger";
 
 export type Dependencies = {
   updateTask: typeof updateTask;
@@ -46,11 +47,23 @@ export const archiveOwnTaskFactory: PrivateHandlerFactory<
   ({ updateTask, findTaskById }) =>
   async (userToken, input) => {
     validateJsonAgainstJsonSchema(input, inputJsonSchema);
-    await getUserDataFromToken(userToken);
+    const { userId } = await getUserDataFromToken(userToken);
     const task = await findTaskById(input.taskId);
 
     if (!task) {
       throw new BusinessRuleError("Task does not exist");
+    }
+
+    if (task.isArchived) {
+      throw new BusinessRuleError("Task is already archived");
+    }
+
+    if (task.userId !== userId) {
+      logWarning("Attempt to archive non-owned task", {
+        userId,
+        taskId: task.id,
+      });
+      throw new BusinessRuleError("You are not allowed to perform this action");
     }
 
     const updatedTask = await updateTask(input.taskId, {

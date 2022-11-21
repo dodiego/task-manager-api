@@ -6,6 +6,7 @@ import {
   validateJsonAgainstJsonSchema,
 } from "core/utils/validate-json-schema";
 import { TaskModel, createTask, findTaskCategoryById } from "database";
+import { logWarning } from "shared/logger";
 
 export type Dependencies = {
   createTask: typeof createTask;
@@ -66,6 +67,14 @@ export const createOwnTaskFactory: PrivateHandlerFactory<
 
     if (!taskCategory) {
       throw new BusinessRuleError("Task Category does not exist");
+    }
+
+    if (taskCategory.userId !== userId) {
+      logWarning("Attempt to create task with non-owned task category", {
+        userId,
+        taskCategoryId: taskCategory.id,
+      });
+      throw new BusinessRuleError("You are not allowed to perform this action");
     }
 
     const task = await createTask({
