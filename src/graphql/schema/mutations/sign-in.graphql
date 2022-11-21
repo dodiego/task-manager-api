@@ -8,5 +8,5 @@ union SignInOutput =
   | BusinessRuleError
   | UnknownError
 type Mutation {
-  signIn(input: SignInInput!): SignInOutput
+  signIn(input: SignInInput!): SignInOutput!
 }

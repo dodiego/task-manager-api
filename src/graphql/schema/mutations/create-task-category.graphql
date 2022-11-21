@@ -2,10 +2,17 @@ input CreateTaskCategoryInput {
   name: String!
 }
 
-type CreateTaskCategoryOutput {
-  TaskCategory: TaskCategory
+type CreateTaskCategorySuccessOutput {
+  taskCategory: TaskCategory!
 }
 
+union CreateTaskCategoryOutput =
+    CreateTaskCategorySuccessOutput
+  | ValidationError
+  | BusinessRuleError
+  | AuthenticationError
+  | UnknownError
+
 type Mutation {
-  createTaskCategory(input: CreateTaskCategoryInput): CreateTaskCategoryOutput
+  createTaskCategory(input: CreateTaskCategoryInput!): CreateTaskCategoryOutput
 }

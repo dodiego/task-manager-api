@@ -2,10 +2,17 @@ input ArchiveTaskInput {
   taskId: ID!
 }
 
-type ArchiveTaskOutput {
-  success: Boolean!
+type ArchiveTaskSuccessOutput {
+  task: Task!
 }
 
+union ArchiveTaskOutput =
+    ArchiveTaskSuccessOutput
+  | ValidationError
+  | BusinessRuleError
+  | AuthenticationError
+  | UnknownError
+
 type Mutation {
-  archiveTask(input: ArchiveTaskInput): ArchiveTaskOutput
+  archiveTask(input: ArchiveTaskInput!): ArchiveTaskOutput
 }

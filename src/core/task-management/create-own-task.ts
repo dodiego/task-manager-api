@@ -26,7 +26,7 @@ const errorMessages: JsonSchemaErrorMessages<CreateOwnTaskInput> = {
   taskDescription:
     "'taskDescription' is an optional string with at most 6000 characters",
   taskTitle:
-    "'taskTitle' is a required string with have at least 1 character and at most 300 characters",
+    "'taskTitle' is a required string with at least 1 character and at most 300 characters",
 };
 const inputJsonSchema: JsonSchemaWithCustomErrorMessages<CreateOwnTaskInput> = {
   type: "object",

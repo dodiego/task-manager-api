@@ -5,10 +5,17 @@ input UpdateTaskInput {
   newTaskColumnId: ID
 }
 
-type UpdateTaskOutput {
-  task: Task
+type UpdateTaskSuccessOutput {
+  task: Task!
 }
 
+union UpdateTaskOutput =
+    UpdateTaskSuccessOutput
+  | ValidationError
+  | BusinessRuleError
+  | AuthenticationError
+  | UnknownError
+
 type Mutation {
-  updateTask(input: UpdateTaskInput): UpdateTaskOutput
+  updateTask(input: UpdateTaskInput!): UpdateTaskOutput
 }

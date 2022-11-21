@@ -2,7 +2,7 @@ import { GraphQLResolveInfo } from "graphql";
 import { GraphQlContext } from "graphql/context";
 import gql from "graphql-tag";
 export type Maybe<T> = T | null;
-export type InputMaybe<T> = Maybe<T>;
+export type InputMaybe<T> = T | undefined;
 export type Exact<T extends { [key: string]: unknown }> = {
   [K in keyof T]: T[K];
 };
@@ -28,9 +28,16 @@ export type ArchiveTaskInput = {
   taskId: Scalars["ID"];
 };
 
-export type ArchiveTaskOutput = {
-  __typename?: "ArchiveTaskOutput";
-  success: Scalars["Boolean"];
+export type ArchiveTaskOutput =
+  | ArchiveTaskSuccessOutput
+  | AuthenticationError
+  | BusinessRuleError
+  | UnknownError
+  | ValidationError;
+
+export type ArchiveTaskSuccessOutput = {
+  __typename?: "ArchiveTaskSuccessOutput";
+  task: Task;
 };
 
 export type AuthenticationError = BaseError & {
@@ -56,9 +63,16 @@ export type CreateTaskCategoryInput = {
   name: Scalars["String"];
 };
 
-export type CreateTaskCategoryOutput = {
-  __typename?: "CreateTaskCategoryOutput";
-  TaskCategory?: Maybe<TaskCategory>;
+export type CreateTaskCategoryOutput =
+  | AuthenticationError
+  | BusinessRuleError
+  | CreateTaskCategorySuccessOutput
+  | UnknownError
+  | ValidationError;
+
+export type CreateTaskCategorySuccessOutput = {
+  __typename?: "CreateTaskCategorySuccessOutput";
+  taskCategory: TaskCategory;
 };
 
 export type CreateTaskInput = {
@@ -84,13 +98,13 @@ export type Mutation = {
   archiveTask?: Maybe<ArchiveTaskOutput>;
   createTask: CreateTaskOutput;
   createTaskCategory?: Maybe<CreateTaskCategoryOutput>;
-  signIn?: Maybe<SignInOutput>;
+  signIn: SignInOutput;
   signUp?: Maybe<SignUpOutput>;
   updateTask?: Maybe<UpdateTaskOutput>;
 };
 
 export type MutationArchiveTaskArgs = {
-  input?: InputMaybe<ArchiveTaskInput>;
+  input: ArchiveTaskInput;
 };
 
 export type MutationCreateTaskArgs = {
@@ -98,7 +112,7 @@ export type MutationCreateTaskArgs = {
 };
 
 export type MutationCreateTaskCategoryArgs = {
-  input?: InputMaybe<CreateTaskCategoryInput>;
+  input: CreateTaskCategoryInput;
 };
 
 export type MutationSignInArgs = {
@@ -110,12 +124,12 @@ export type MutationSignUpArgs = {
 };
 
 export type MutationUpdateTaskArgs = {
-  input?: InputMaybe<UpdateTaskInput>;
+  input: UpdateTaskInput;
 };
 
 export type Query = {
   __typename?: "Query";
-  taskCategories: Array<Maybe<Task>>;
+  taskCategories: Array<Maybe<TaskCategory>>;
 };
 
 export type SignInInput = {
@@ -170,9 +184,16 @@ export type UpdateTaskInput = {
   taskId: Scalars["ID"];
 };
 
-export type UpdateTaskOutput = {
-  __typename?: "UpdateTaskOutput";
-  task?: Maybe<Task>;
+export type UpdateTaskOutput =
+  | AuthenticationError
+  | BusinessRuleError
+  | UnknownError
+  | UpdateTaskSuccessOutput
+  | ValidationError;
+
+export type UpdateTaskSuccessOutput = {
+  __typename?: "UpdateTaskSuccessOutput";
+  task: Task;
 };
 
 export type User = {
@@ -294,7 +315,13 @@ export type DirectiveResolverFn<
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
   ArchiveTaskInput: ArchiveTaskInput;
-  ArchiveTaskOutput: ResolverTypeWrapper<ArchiveTaskOutput>;
+  ArchiveTaskOutput:
+    | ResolversTypes["ArchiveTaskSuccessOutput"]
+    | ResolversTypes["AuthenticationError"]
+    | ResolversTypes["BusinessRuleError"]
+    | ResolversTypes["UnknownError"]
+    | ResolversTypes["ValidationError"];
+  ArchiveTaskSuccessOutput: ResolverTypeWrapper<ArchiveTaskSuccessOutput>;
   AuthenticationError: ResolverTypeWrapper<AuthenticationError>;
   AuthenticationOutput: ResolverTypeWrapper<AuthenticationOutput>;
   BaseError:
@@ -305,7 +332,13 @@ export type ResolversTypes = {
   Boolean: ResolverTypeWrapper<Scalars["Boolean"]>;
   BusinessRuleError: ResolverTypeWrapper<BusinessRuleError>;
   CreateTaskCategoryInput: CreateTaskCategoryInput;
-  CreateTaskCategoryOutput: ResolverTypeWrapper<CreateTaskCategoryOutput>;
+  CreateTaskCategoryOutput:
+    | ResolversTypes["AuthenticationError"]
+    | ResolversTypes["BusinessRuleError"]
+    | ResolversTypes["CreateTaskCategorySuccessOutput"]
+    | ResolversTypes["UnknownError"]
+    | ResolversTypes["ValidationError"];
+  CreateTaskCategorySuccessOutput: ResolverTypeWrapper<CreateTaskCategorySuccessOutput>;
   CreateTaskInput: CreateTaskInput;
   CreateTaskOutput:
     | ResolversTypes["AuthenticationError"]
@@ -335,7 +368,13 @@ export type ResolversTypes = {
   TaskStatus: TaskStatus;
   UnknownError: ResolverTypeWrapper<UnknownError>;
   UpdateTaskInput: UpdateTaskInput;
-  UpdateTaskOutput: ResolverTypeWrapper<UpdateTaskOutput>;
+  UpdateTaskOutput:
+    | ResolversTypes["AuthenticationError"]
+    | ResolversTypes["BusinessRuleError"]
+    | ResolversTypes["UnknownError"]
+    | ResolversTypes["UpdateTaskSuccessOutput"]
+    | ResolversTypes["ValidationError"];
+  UpdateTaskSuccessOutput: ResolverTypeWrapper<UpdateTaskSuccessOutput>;
   User: ResolverTypeWrapper<User>;
   ValidationError: ResolverTypeWrapper<ValidationError>;
 };
@@ -343,7 +382,13 @@ export type ResolversTypes = {
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
   ArchiveTaskInput: ArchiveTaskInput;
-  ArchiveTaskOutput: ArchiveTaskOutput;
+  ArchiveTaskOutput:
+    | ResolversParentTypes["ArchiveTaskSuccessOutput"]
+    | ResolversParentTypes["AuthenticationError"]
+    | ResolversParentTypes["BusinessRuleError"]
+    | ResolversParentTypes["UnknownError"]
+    | ResolversParentTypes["ValidationError"];
+  ArchiveTaskSuccessOutput: ArchiveTaskSuccessOutput;
   AuthenticationError: AuthenticationError;
   AuthenticationOutput: AuthenticationOutput;
   BaseError:
@@ -354,7 +399,13 @@ export type ResolversParentTypes = {
   Boolean: Scalars["Boolean"];
   BusinessRuleError: BusinessRuleError;
   CreateTaskCategoryInput: CreateTaskCategoryInput;
-  CreateTaskCategoryOutput: CreateTaskCategoryOutput;
+  CreateTaskCategoryOutput:
+    | ResolversParentTypes["AuthenticationError"]
+    | ResolversParentTypes["BusinessRuleError"]
+    | ResolversParentTypes["CreateTaskCategorySuccessOutput"]
+    | ResolversParentTypes["UnknownError"]
+    | ResolversParentTypes["ValidationError"];
+  CreateTaskCategorySuccessOutput: CreateTaskCategorySuccessOutput;
   CreateTaskInput: CreateTaskInput;
   CreateTaskOutput:
     | ResolversParentTypes["AuthenticationError"]
@@ -383,7 +434,13 @@ export type ResolversParentTypes = {
   TaskCategory: TaskCategory;
   UnknownError: UnknownError;
   UpdateTaskInput: UpdateTaskInput;
-  UpdateTaskOutput: UpdateTaskOutput;
+  UpdateTaskOutput:
+    | ResolversParentTypes["AuthenticationError"]
+    | ResolversParentTypes["BusinessRuleError"]
+    | ResolversParentTypes["UnknownError"]
+    | ResolversParentTypes["UpdateTaskSuccessOutput"]
+    | ResolversParentTypes["ValidationError"];
+  UpdateTaskSuccessOutput: UpdateTaskSuccessOutput;
   User: User;
   ValidationError: ValidationError;
 };
@@ -392,7 +449,22 @@ export type ArchiveTaskOutputResolvers<
   ContextType = GraphQlContext,
   ParentType extends ResolversParentTypes["ArchiveTaskOutput"] = ResolversParentTypes["ArchiveTaskOutput"]
 > = {
-  success?: Resolver<ResolversTypes["Boolean"], ParentType, ContextType>;
+  __resolveType: TypeResolveFn<
+    | "ArchiveTaskSuccessOutput"
+    | "AuthenticationError"
+    | "BusinessRuleError"
+    | "UnknownError"
+    | "ValidationError",
+    ParentType,
+    ContextType
+  >;
+};
+
+export type ArchiveTaskSuccessOutputResolvers<
+  ContextType = GraphQlContext,
+  ParentType extends ResolversParentTypes["ArchiveTaskSuccessOutput"] = ResolversParentTypes["ArchiveTaskSuccessOutput"]
+> = {
+  task?: Resolver<ResolversTypes["Task"], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -439,8 +511,23 @@ export type CreateTaskCategoryOutputResolvers<
   ContextType = GraphQlContext,
   ParentType extends ResolversParentTypes["CreateTaskCategoryOutput"] = ResolversParentTypes["CreateTaskCategoryOutput"]
 > = {
-  TaskCategory?: Resolver<
-    Maybe<ResolversTypes["TaskCategory"]>,
+  __resolveType: TypeResolveFn<
+    | "AuthenticationError"
+    | "BusinessRuleError"
+    | "CreateTaskCategorySuccessOutput"
+    | "UnknownError"
+    | "ValidationError",
+    ParentType,
+    ContextType
+  >;
+};
+
+export type CreateTaskCategorySuccessOutputResolvers<
+  ContextType = GraphQlContext,
+  ParentType extends ResolversParentTypes["CreateTaskCategorySuccessOutput"] = ResolversParentTypes["CreateTaskCategorySuccessOutput"]
+> = {
+  taskCategory?: Resolver<
+    ResolversTypes["TaskCategory"],
     ParentType,
     ContextType
   >;
@@ -478,7 +565,7 @@ export type MutationResolvers<
     Maybe<ResolversTypes["ArchiveTaskOutput"]>,
     ParentType,
     ContextType,
-    Partial<MutationArchiveTaskArgs>
+    RequireFields<MutationArchiveTaskArgs, "input">
   >;
   createTask?: Resolver<
     ResolversTypes["CreateTaskOutput"],
@@ -490,10 +577,10 @@ export type MutationResolvers<
     Maybe<ResolversTypes["CreateTaskCategoryOutput"]>,
     ParentType,
     ContextType,
-    Partial<MutationCreateTaskCategoryArgs>
+    RequireFields<MutationCreateTaskCategoryArgs, "input">
   >;
   signIn?: Resolver<
-    Maybe<ResolversTypes["SignInOutput"]>,
+    ResolversTypes["SignInOutput"],
     ParentType,
     ContextType,
     RequireFields<MutationSignInArgs, "input">
@@ -508,7 +595,7 @@ export type MutationResolvers<
     Maybe<ResolversTypes["UpdateTaskOutput"]>,
     ParentType,
     ContextType,
-    Partial<MutationUpdateTaskArgs>
+    RequireFields<MutationUpdateTaskArgs, "input">
   >;
 };
 
@@ -517,7 +604,7 @@ export type QueryResolvers<
   ParentType extends ResolversParentTypes["Query"] = ResolversParentTypes["Query"]
 > = {
   taskCategories?: Resolver<
-    Array<Maybe<ResolversTypes["Task"]>>,
+    Array<Maybe<ResolversTypes["TaskCategory"]>>,
     ParentType,
     ContextType
   >;
@@ -592,7 +679,22 @@ export type UpdateTaskOutputResolvers<
   ContextType = GraphQlContext,
   ParentType extends ResolversParentTypes["UpdateTaskOutput"] = ResolversParentTypes["UpdateTaskOutput"]
 > = {
-  task?: Resolver<Maybe<ResolversTypes["Task"]>, ParentType, ContextType>;
+  __resolveType: TypeResolveFn<
+    | "AuthenticationError"
+    | "BusinessRuleError"
+    | "UnknownError"
+    | "UpdateTaskSuccessOutput"
+    | "ValidationError",
+    ParentType,
+    ContextType
+  >;
+};
+
+export type UpdateTaskSuccessOutputResolvers<
+  ContextType = GraphQlContext,
+  ParentType extends ResolversParentTypes["UpdateTaskSuccessOutput"] = ResolversParentTypes["UpdateTaskSuccessOutput"]
+> = {
+  task?: Resolver<ResolversTypes["Task"], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -615,11 +717,13 @@ export type ValidationErrorResolvers<
 
 export type Resolvers<ContextType = GraphQlContext> = {
   ArchiveTaskOutput?: ArchiveTaskOutputResolvers<ContextType>;
+  ArchiveTaskSuccessOutput?: ArchiveTaskSuccessOutputResolvers<ContextType>;
   AuthenticationError?: AuthenticationErrorResolvers<ContextType>;
   AuthenticationOutput?: AuthenticationOutputResolvers<ContextType>;
   BaseError?: BaseErrorResolvers<ContextType>;
   BusinessRuleError?: BusinessRuleErrorResolvers<ContextType>;
   CreateTaskCategoryOutput?: CreateTaskCategoryOutputResolvers<ContextType>;
+  CreateTaskCategorySuccessOutput?: CreateTaskCategorySuccessOutputResolvers<ContextType>;
   CreateTaskOutput?: CreateTaskOutputResolvers<ContextType>;
   CreateTaskSuccessOutput?: CreateTaskSuccessOutputResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
@@ -630,6 +734,7 @@ export type Resolvers<ContextType = GraphQlContext> = {
   TaskCategory?: TaskCategoryResolvers<ContextType>;
   UnknownError?: UnknownErrorResolvers<ContextType>;
   UpdateTaskOutput?: UpdateTaskOutputResolvers<ContextType>;
+  UpdateTaskSuccessOutput?: UpdateTaskSuccessOutputResolvers<ContextType>;
   User?: UserResolvers<ContextType>;
   ValidationError?: ValidationErrorResolvers<ContextType>;
 };

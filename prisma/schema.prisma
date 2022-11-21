@@ -31,18 +31,22 @@ model Task {
 }
 
 model TaskCategory {
-  id    String @id @default(dbgenerated("gen_random_uuid()"))
-  name  String @db.VarChar(300)
-  tasks Task[]
+  id     String @id @default(dbgenerated("gen_random_uuid()"))
+  name   String @db.VarChar(300)
+  tasks  Task[]
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
 
+  @@unique([id, userId])
   @@map("task_categories")
 }
 
 model User {
-  id       String @id @default(dbgenerated("gen_random_uuid()"))
-  email    String @unique @db.VarChar(600)
-  password String @db.VarChar(1000)
-  tasks    Task[]
+  id           String         @id @default(dbgenerated("gen_random_uuid()"))
+  email        String         @unique @db.VarChar(600)
+  password     String         @db.VarChar(1000)
+  tasks        Task[]
+  TaskCategory TaskCategory[]
 
   @@map("users")
 }

@@ -1,9 +1,13 @@
-import { Task, TaskStatus } from "@prisma/client";
+import { Task } from "@prisma/client";
 import { logInfo } from "shared/logger";
 import { client } from "./client";
 
 export type TaskModel = Task;
-
+export enum TaskStatus {
+  ToDo = "ToDo",
+  InProgress = "InProgress",
+  Done = "Done",
+}
 type CreateTaskInput = Pick<
   TaskModel,
   "title" | "description" | "taskCategoryId" | "userId"
@@ -40,6 +44,16 @@ export async function updateTask(
       status: fields.status,
       isArchived: fields.isArchived,
     },
+    where: {
+      id: taskId,
+    },
+  });
+
+  return task;
+}
+
+export async function findTaskById(taskId: string): Promise<TaskModel | null> {
+  const task = await client.task.findUnique({
     where: {
       id: taskId,
     },
