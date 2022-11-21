@@ -54,7 +54,7 @@
     "dev": "concurrently \"npm run debug\" \"npm run graphql:codegen -- --watch\"",
     "prestart": "tsc -p tsconfig.production.json",
     "start": "ts-node -r tsconfig-paths/register build/src/index.js",
-    "bootstrap": "npm run db:start && npm run db:generate && npm run graphql:codegen",
+    "bootstrap": "npm run db:generate && npm run graphql:codegen",
     "db:start": "docker-compose up -d database",
     "db:generate": "prisma migrate reset && prisma generate",
     "db:migrate": "prisma migrate dev && prisma generate",
