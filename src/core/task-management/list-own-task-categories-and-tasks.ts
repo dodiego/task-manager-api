@@ -9,15 +9,15 @@ export type Dependencies = {
   findTaskCategoriesAndTasksByUserId: typeof findTaskCategoriesAndTasksByUserId;
 };
 
-export type CreateOwnTaskCategoryInput = undefined | null;
+export type ListOwnTaskCategoriesAndTasksInput = undefined | null;
 
-export type CreateOwnTaskCategoryOutput = {
+export type ListOwnTaskCategoriesAndTasksOutput = {
   taskCategories: TaskCategoryModel[];
 };
-export const listOwnTaskCategoriesAndTasks: PrivateHandlerFactory<
+export const listOwnTaskCategoriesAndTasksFactory: PrivateHandlerFactory<
   Dependencies,
-  CreateOwnTaskCategoryInput,
-  CreateOwnTaskCategoryOutput
+  ListOwnTaskCategoriesAndTasksInput,
+  ListOwnTaskCategoriesAndTasksOutput
 > =
   ({ findTaskCategoriesAndTasksByUserId }) =>
   async (userToken) => {
@@ -27,6 +27,6 @@ export const listOwnTaskCategoriesAndTasks: PrivateHandlerFactory<
     return { taskCategories };
   };
 
-export default listOwnTaskCategoriesAndTasks({
+export default listOwnTaskCategoriesAndTasksFactory({
   findTaskCategoriesAndTasksByUserId,
 });

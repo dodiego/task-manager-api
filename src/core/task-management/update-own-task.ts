@@ -23,7 +23,7 @@ export type Dependencies = {
 export type UpdateOwnTaskInput = {
   taskId: string;
   newTaskTitle?: string;
-  newTaskDescription?: string;
+  newTaskDescription?: string | null;
   newTaskCategoryId?: string;
   newTaskStatus?: TaskStatus;
 };
@@ -126,6 +126,14 @@ export const updateOwnTaskFactory: PrivateHandlerFactory<
 
     if (task.userId !== userId) {
       logWarning("Attempt to update non-owned task", {
+        userId,
+        taskId: task.id,
+      });
+      throw new BusinessRuleError("You are not allowed to perform this action");
+    }
+
+    if (task.isArchived) {
+      logWarning("Attempt to update archived task", {
         userId,
         taskId: task.id,
       });

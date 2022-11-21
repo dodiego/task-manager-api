@@ -19,7 +19,7 @@ export type Dependencies = {
 
 export type UpdateOwnTaskCategoryInput = {
   taskCategoryId: string;
-  newTaskCategoryName?: string;
+  newTaskCategoryName: string;
 };
 
 export type UpdateOwnTaskCategoryOutput = {
@@ -28,21 +28,20 @@ export type UpdateOwnTaskCategoryOutput = {
 const errorMessages: JsonSchemaErrorMessages<UpdateOwnTaskCategoryInput> = {
   taskCategoryId: "'taskCategoryId' is an optional string and must be an uuid",
   newTaskCategoryName:
-    "'newTaskCategoryName' is an optional string with at most 300 characters",
+    "'newTaskCategoryName' is a required string with at least 1 character and at most 300 characters",
 };
 const inputJsonSchema: JsonSchemaWithCustomErrorMessages<UpdateOwnTaskCategoryInput> =
   {
     type: "object",
-    // @ts-expect-error
     properties: {
       newTaskCategoryName: {
         type: "string",
-        format: "uuid",
+        maxLength: 300,
+        minLength: 1,
       },
       taskCategoryId: {
         type: "string",
-        maxLength: 300,
-        minLength: 1,
+        format: "uuid",
       },
     },
     required: ["taskCategoryId"],
@@ -52,7 +51,7 @@ const inputJsonSchema: JsonSchemaWithCustomErrorMessages<UpdateOwnTaskCategoryIn
     },
   };
 
-export const updateOwnTaskFactory: PrivateHandlerFactory<
+export const updateOwnTaskCategoryFactory: PrivateHandlerFactory<
   Dependencies,
   UpdateOwnTaskCategoryInput,
   UpdateOwnTaskCategoryOutput
@@ -72,6 +71,7 @@ export const updateOwnTaskFactory: PrivateHandlerFactory<
         userId,
         taskCategoryId: taskCategory.id,
       });
+      throw new BusinessRuleError("You are not allowed to perform this action");
     }
 
     const updatedTaskCategory = await updateTaskCategory(input.taskCategoryId, {
@@ -80,7 +80,7 @@ export const updateOwnTaskFactory: PrivateHandlerFactory<
     return { taskCategory: updatedTaskCategory };
   };
 
-export default updateOwnTaskFactory({
+export default updateOwnTaskCategoryFactory({
   findTaskCategoryById,
   updateTaskCategory,
 });

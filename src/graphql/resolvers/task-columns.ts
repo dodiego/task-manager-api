@@ -1,4 +1,4 @@
-import listOwnTaskCategoriesAndTasks from "core/task-management/list-own-task-categories-and-tasks";
+import listOwnTaskCategoriesAndTasksFactory from "core/task-management/list-own-task-categories-and-tasks";
 import { QueryResolvers } from "graphql/generated/graphql-types";
 
 export const TaskColumnsResolver: QueryResolvers["taskColumns"] = async (
@@ -6,7 +6,7 @@ export const TaskColumnsResolver: QueryResolvers["taskColumns"] = async (
   _args,
   context
 ) => {
-  const { taskCategories } = await listOwnTaskCategoriesAndTasks(
+  const { taskCategories } = await listOwnTaskCategoriesAndTasksFactory(
     context.userToken!,
     null
   );
