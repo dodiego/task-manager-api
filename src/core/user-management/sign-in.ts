@@ -9,6 +9,8 @@ import { findUserByEmail } from "database";
 
 export type Dependencies = {
   findUserByEmail: typeof findUserByEmail;
+  verifyHash: typeof verifyHash;
+  generateAccessToken: typeof generateAccessToken;
 };
 
 export type SignInInput = {
@@ -49,14 +51,14 @@ export const signInFactory: PublicHandlerFactory<
   SignInInput,
   SignInOutput
 > =
-  ({ findUserByEmail }) =>
+  ({ findUserByEmail, generateAccessToken, verifyHash }) =>
   async (input) => {
     validateJsonAgainstJsonSchema(input, inputJsonSchema);
 
     const user = await findUserByEmail(input.email);
 
     if (!user) {
-      throw new BusinessRuleError("Invalid email / password combination.");
+      throw new BusinessRuleError("Invalid email / password combination");
     }
 
     const isPasswordValid = await verifyHash({
@@ -65,7 +67,7 @@ export const signInFactory: PublicHandlerFactory<
     });
 
     if (!isPasswordValid) {
-      throw new BusinessRuleError("Invalid email / password combination.");
+      throw new BusinessRuleError("Invalid email / password combination");
     }
 
     const { token: accessToken } = await generateAccessToken({
@@ -76,4 +78,8 @@ export const signInFactory: PublicHandlerFactory<
     };
   };
 
-export default signInFactory({ findUserByEmail });
+export default signInFactory({
+  findUserByEmail,
+  generateAccessToken,
+  verifyHash,
+});

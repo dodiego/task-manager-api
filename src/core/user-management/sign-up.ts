@@ -11,6 +11,8 @@ import { createUser, findUserByEmail } from "database";
 export type Dependencies = {
   createUser: typeof createUser;
   findUserByEmail: typeof findUserByEmail;
+  hashString: typeof hashString;
+  generateAccessToken: typeof generateAccessToken;
 };
 
 export type SignUpInput = {
@@ -43,8 +45,6 @@ const inputJsonSchema: JsonSchemaWithCustomErrorMessages<SignUpInput> = {
     },
     confirmPassword: {
       type: "string",
-      maxLength: 100,
-      minLength: 6,
     },
   },
   required: ["email", "password", "confirmPassword"],
@@ -59,7 +59,7 @@ export const signUpFactory: PublicHandlerFactory<
   SignUpInput,
   SignUpOutput
 > =
-  ({ createUser, findUserByEmail }) =>
+  ({ createUser, findUserByEmail, hashString, generateAccessToken }) =>
   async (input) => {
     validateJsonAgainstJsonSchema(input, inputJsonSchema);
 
@@ -70,7 +70,7 @@ export const signUpFactory: PublicHandlerFactory<
     const isEmailUsed = await findUserByEmail(input.email);
 
     if (isEmailUsed) {
-      throw new BusinessRuleError("This email is already used.");
+      throw new BusinessRuleError("This email is already used");
     }
     const { hashedInput: hashedPassword } = await hashString(input.password);
     const user = await createUser({
@@ -85,4 +85,9 @@ export const signUpFactory: PublicHandlerFactory<
     };
   };
 
-export default signUpFactory({ findUserByEmail, createUser });
+export default signUpFactory({
+  findUserByEmail,
+  createUser,
+  hashString,
+  generateAccessToken,
+});
